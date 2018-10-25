@@ -49,11 +49,11 @@ $ mosquitto_sub  -h mgmt.foundries.io -p 18830 -t 'id/reel_board-SOME_HEX_VALUE/
 
 To view your data being graphed in Grafana, load:
 
-https://mgmt.foundries.io/mqtt/reel_board-YOUR_DEVICEID_GOES_HERE.html
+https://mgmt.foundries.io/mqtt/reel_board-SOME_HEX_VALUE.html
 
 You can use any other MQTT client you like as well!
 
-Where "YOUR_DEVICEID_GOES_HERE" is the "DeviceID" value printed by
+Where "SOME_HEX_VALUE" is the "DeviceID" value printed by
 your board at startup.
 
 # Hackathon Challenges
