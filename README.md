@@ -12,6 +12,7 @@ data to an MQTT broker on the cloud at mgmt.foundries.io, port 18830.
 To build and install the app:
 
 ```
+# Make sure you've set up a zephyr build environment and run "source zephyr.env.sh" (or zephyr-env.cmd on Windows):
 mkdir build && cd build
 cmake -DBOARD=reel_board -GNinja ..
 ninja
@@ -140,3 +141,6 @@ the IoT Gateway" steps in the "hawkBit and MQTT demonstration system"
 documentation (link requires a login):
 
 https://app.foundries.io/docs/0.31/other/hawkbit-mqtt-system.html#set-up-the-iot-gateway
+
+You'll need to change the MQTT host to point at the broker used in
+this demo to reproduce it exactly (these instructions use another cloud broker).
