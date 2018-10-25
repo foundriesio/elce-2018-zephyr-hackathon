@@ -1,0 +1,115 @@
+# Copyright (c) 2017 Linaro Limited
+# Copyright (c) 2017-2018 Foundries.io Ltd
+#
+# SPDX-License-Identifier: Apache-2.0
+#
+
+mainmenu "Foundries elce-2018-hackathon-cloud-app Configuration"
+
+# Hidden option, enables device-specific settings
+config ELCE2018_DEVICE
+	bool
+	default y
+	select ELCE2018_DEVICE_SOC_SERIES_NRF52X if SOC_SERIES_NRF52X
+	help
+	  Main config to enable device specific settings
+
+# "Nordic Semiconductor nRF52 device specific application settings.
+# You could add another option for other SoC families.
+config ELCE2018_DEVICE_SOC_SERIES_NRF52X
+	bool
+	select NET_IPV6
+	select NET_CONFIG_NEED_IPV6
+	select NET_CONFIG_BT_NODE
+	select SENSOR
+	select TEMP_NRF5
+	select ENTROPY_NRF5_RNG
+	select NET_SHELL if SOC_NRF52840
+	default n
+
+if ELCE2018_DEVICE_SOC_SERIES_NRF52X
+
+config BT_DEVICE_NAME
+	default "ELCE2018 IPSP node"
+
+# This sets the temperature sensor device name so the application can find it.
+config TEMP_NRF5_NAME
+	default "die-temp"
+
+config NET_CONFIG_PEER_IPV6_ADDR
+	default "fe80::d4e7:0:0:1"
+
+config NET_L2_BT
+	default y
+
+config NET_IF_UNICAST_IPV6_ADDR_COUNT
+	default 3
+
+config NET_IF_MCAST_IPV6_ADDR_COUNT
+	default 2
+
+config NET_CONFIG_INIT_TIMEOUT
+	default 0
+
+config NET_TCP_RETRY_COUNT
+	# Reduced TCP retry count (default is 9) to avoid locking up the net and
+	# bluetooth stack on packet retransmission as it consumes too much ram
+	default 2 if SOC_NRF52832
+
+config NET_UDP
+	default n
+
+config BT_RX_BUF_COUNT
+	default 10
+
+config BT_RX_BUF_LEN
+	default 128
+
+config BT_CTLR_RX_BUFFERS
+	default 6
+
+config BT_CTLR_TX_BUFFERS
+	default 7
+
+config BT_RX_STACK_SIZE
+	default 2048
+
+config BT_L2CAP_TX_BUF_COUNT
+	default 6
+
+# The following BT configs are not needed in peripheral mode.
+
+config BT_CTLR_CONN_PARAM_REQ
+	default n
+
+config BT_CTLR_ADV_EXT
+	default n
+
+endif # ELCE2018_DEVICE_SOC_SERIES_NRF52X
+
+# Settings which work for the gateway-side broker used for the hackathon. YMMV.
+
+config ELCE2018_MQTT_USERNAME
+	string "MQTT username"
+	default "mqtt-username"
+	help
+	   Username value to use when connecting to MQTT broker.
+
+config ELCE2018_MQTT_PASSWORD
+	string "MQTT password"
+	default ""
+	help
+	   Password value to use when connecting to MQTT broker.
+
+	   If this is the empty string, a password based on the board
+	   and a board-specific ID number will be used instead. This
+	   is intended for testing and development only.
+
+module = ELCE2018
+module-dep = LOG
+module-str = Log level for ELCE2018 application
+source "subsys/logging/Kconfig.template.log_config"
+
+# Leave this at the bottom: we need to override Zephyr's default settings
+# with some of the values above.
+source "$ZEPHYR_BASE/Kconfig.zephyr"
